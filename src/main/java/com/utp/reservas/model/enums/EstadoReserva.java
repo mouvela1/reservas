@@ -1,4 +1,4 @@
-package com.utp.reservas.model.entity;
+package com.utp.reservas.model.enums;
 
 public enum EstadoReserva {
     PENDIENTE,

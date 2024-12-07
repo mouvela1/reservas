@@ -1,6 +1,7 @@
 package com.utp.reservas.controller;
 
 
+import com.utp.reservas.model.dto.LoginResponse;
 import com.utp.reservas.model.entity.Usuario;
 import com.utp.reservas.service.UserService;
 import com.utp.reservas.dto.UsuarioDTO;
@@ -33,15 +34,29 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Usuario usuario) {
+    public ResponseEntity<LoginResponse> login(@RequestBody Usuario usuario) {
         Optional<Usuario> userOpt = userService.login(usuario.getUsername(), usuario.getPassword());
         if (userOpt.isPresent()) {
-            Usuario usuarioAutenticado = userOpt.get();
-            String token = userService.generarToken(usuarioAutenticado);
-            return ResponseEntity.ok("Bearer " + token);
+
+            Usuario UsuarioLogueado = userOpt.get();
+            System.out.println(UsuarioLogueado); // Depuración en consola
+            String token = userService.generarToken(UsuarioLogueado);
+
+            // Crear la respuesta
+            LoginResponse response = new LoginResponse(
+                    UsuarioLogueado.getUsername(),
+                    "Bearer "+token,
+                    UsuarioLogueado.getNombre() + " " + UsuarioLogueado.getApellido()
+            );
+
+            // Devolver el objeto como JSON
+            return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+
+        // Respuesta en caso de error
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
+
 
     @GetMapping("/dni/{dni}")
     @PreAuthorize("hasRole('ADMINISTRATIVO')")

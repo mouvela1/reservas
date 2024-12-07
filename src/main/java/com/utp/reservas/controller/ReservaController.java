@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/reservas")
 public class ReservaController {
-
     @Autowired
     private ReservaService reservaService;
 
@@ -24,7 +23,6 @@ public class ReservaController {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Reserva nuevaReserva = reservaService.crearReserva(reserva, username);
         return ResponseEntity.ok(nuevaReserva);
-
     }
 
     @GetMapping
@@ -39,11 +37,16 @@ public class ReservaController {
         return ResponseEntity.ok(reservaService.listarReservasPorUsuario(usuarioId));
     }
 
-    @PostMapping("/{id}/cancelar")
-    @PreAuthorize("hasAnyRole('PROFESOR', 'ADMINISTRATIVO', 'ADMIN')")
-    public ResponseEntity<Void> cancelarReserva(@PathVariable Long id) {
-        reservaService.cancelarReserva(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{reservaId}/confirmar")
+    @PreAuthorize("hasRole('ADMINISTRATIVO')")
+    public Reserva confirmarReserva(@PathVariable Long reservaId) {
+        return reservaService.confirmarReserva(reservaId);
+    }
+
+    @PutMapping("/{reservaId}/cancelar")
+    @PreAuthorize("hasRole('ADMINISTRATIVO') or hasRole('ESTUDIANTE')")
+    public Reserva cancelarReserva(@PathVariable Long reservaId) {
+        return reservaService.cancelarReserva(reservaId);
     }
 }
 

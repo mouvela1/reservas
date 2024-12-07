@@ -72,7 +72,6 @@ public class SpaceController {
         if (fechaInicioStr == null || fechaFinStr == null) {
             return ResponseEntity.badRequest().body(new ApiResponse<>("Los parámetros 'fechaHoraInicio' y 'fechaHoraFin' son obligatorios.", null));
         }
-
         LocalDateTime fechaHoraInicio;
         LocalDateTime fechaHoraFin;
         try {

@@ -19,5 +19,7 @@ public class RolController {
     public List<Rol> listarRoles() {
         return rolService.obtenerTodosLosRoles();
     }
+
+
 }
 

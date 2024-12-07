@@ -1,6 +1,6 @@
 package com.utp.reservas.service.state;
 
-import com.utp.reservas.model.entity.EstadoReserva;
+import com.utp.reservas.model.enums.EstadoReserva;
 import com.utp.reservas.model.entity.Reserva;
 
 public class ConfirmadaState implements ReservaState {

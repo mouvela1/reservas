@@ -1,5 +1,6 @@
 package com.utp.reservas.model.entity;
 
+import com.utp.reservas.model.enums.EstadoReserva;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

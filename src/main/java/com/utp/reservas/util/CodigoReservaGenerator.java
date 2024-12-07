@@ -1,29 +1,49 @@
 package com.utp.reservas.util;
 
+import com.utp.reservas.repository.ReservaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
+@Component
 public class CodigoReservaGenerator {
 
-    public static String generarCodigo(LocalDateTime fechaHoraInicio) {
-        String fecha = fechaHoraInicio.format(DateTimeFormatter.ofPattern("ddMMyy"));
-        String alfanumerico = generarAlfanumericoUnico(7);
-        return "RES-" + fecha + alfanumerico;
-    }
+    @Autowired
+    private ReservaRepository reservaRepository;
 
-    private static String generarAlfanumericoUnico(int longitud) {
-        String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random random = new Random();
-        StringBuilder builder = new StringBuilder();
+    private static final String PREFIJO = "RES";
 
-        for (int i = 0; i < longitud; i++) {
-            int index = random.nextInt(caracteres.length());
-            builder.append(caracteres.charAt(index));
+    public String generarCodigo(LocalDateTime fechaHora) {
+        String fechaFormato = fechaHora.format(DateTimeFormatter.ofPattern("ddMMyy-HHmm"));
+        String alfanumerico = generarAlfanumericoUnico();
+
+        String codigo = PREFIJO + "-" + fechaFormato + "-" + alfanumerico;
+
+        // Validar unicidad
+        while (reservaRepository.existsByCodigoReserva(codigo)) {
+            alfanumerico = generarAlfanumericoUnico();
+            codigo = PREFIJO + "-" + fechaFormato + "-" + alfanumerico;
         }
 
-        return builder.toString();
+        return codigo;
+    }
+
+    private String generarAlfanumericoUnico() {
+        int longitud = 6;
+        String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < longitud; i++) {
+            sb.append(caracteres.charAt(random.nextInt(caracteres.length())));
+        }
+
+        return sb.toString();
     }
 }
+
 
 
