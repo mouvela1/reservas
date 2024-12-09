@@ -14,7 +14,7 @@ public class CodigoReservaGenerator {
     @Autowired
     private ReservaRepository reservaRepository;
 
-    private static final String PREFIJO = "RES";
+    private final String PREFIJO = "RES";
 
     public String generarCodigo(LocalDateTime fechaHora) {
         String fechaFormato = fechaHora.format(DateTimeFormatter.ofPattern("ddMMyy-HHmm"));
@@ -23,10 +23,10 @@ public class CodigoReservaGenerator {
         String codigo = PREFIJO + "-" + fechaFormato + "-" + alfanumerico;
 
         // Validar unicidad
-        while (reservaRepository.existsByCodigoReserva(codigo)) {
+        do {
             alfanumerico = generarAlfanumericoUnico();
             codigo = PREFIJO + "-" + fechaFormato + "-" + alfanumerico;
-        }
+        } while (reservaRepository.existsByCodigoReserva(codigo));
 
         return codigo;
     }

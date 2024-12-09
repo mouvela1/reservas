@@ -75,7 +75,7 @@ public class UsuarioController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'ADMIN')")
     public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
         List<UsuarioDTO> usuarios = userService.listarUsuarios();
         return ResponseEntity.ok(usuarios);
